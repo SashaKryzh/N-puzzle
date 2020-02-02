@@ -4,15 +4,13 @@ import sys
 import re
 from tools import read_file
 
-
 class puzzle_board:
 
     def __init__(self):
-        self.dim = random.randint(3, 9)
+        self.dim = -1
 
     def parse_puzzle(self, data:str):
         lines = data.split('\n')
-        self.dim = -1
         x = []
         for line in lines:
             line_nb = re.search('^([\d\t ]+).*', line)
@@ -37,6 +35,14 @@ class puzzle_board:
             if x_match == False:
                 return -1
 
+    def define_dim(self):
+        size = input("Enter puzzle size or 0 for random : ")
+        if not re.match('^[03-9]$|^[0-9]{2,4}$', size):
+            print("Incorrect value! Exit.")
+            sys.exit(2)
+        if (size == '0'):
+            size = random.randint(3, 100)
+        self.dim = int(size)
 
     def generate_puzzle(self, values=None):
         if values == None:
@@ -58,6 +64,7 @@ if len(sys.argv) > 1:
     values = pzl.parse_puzzle(file)
     board = pzl.generate_puzzle(values)
 else:
+    pzl.define_dim()
     board = pzl.generate_puzzle()
 
 print(board)
