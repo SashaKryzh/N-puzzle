@@ -5,12 +5,12 @@ import re
 from tools import read_file
 from pzl_tools import *
 
-class puzzle_board:
+class PuzzleBoard:
 
     def __init__(self):
         self.dim = -1
 
-    def parse_puzzle(self, data:str):
+    def parsePuzzle(self, data:str):
         lines = data.split('\n')
         x = []
         for line in lines:
@@ -24,7 +24,7 @@ class puzzle_board:
                     x.append(int(nb))
         return x
 
-    def check_values(self, values:list):
+    def checkValues(self, values:list):
         if len(values) != self.dim * self.dim:
             return -1
         xcheck = np.arange(self.dim * self.dim)
@@ -36,7 +36,7 @@ class puzzle_board:
             if x_match == False:
                 return -1
 
-    def define_dim(self):
+    def defineDim(self):
         size = input("Enter puzzle size or 0 for random : ")
         if not re.match('^[03-9]$|^[0-9]{2,4}$', size):
             print("Incorrect value! Exit.")
@@ -45,7 +45,7 @@ class puzzle_board:
             size = random.randint(3, 100)
         self.dim = int(size)
 
-    def generate_puzzle(self, values=None, solution=False):
+    def generatePuzzle(self, values=None, solution=False):
         if values == None:
             values = np.arange(self.dim * self.dim)
             np.random.shuffle(values)
@@ -55,9 +55,11 @@ class puzzle_board:
 
         values = np.asarray(values)
         board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
+        board = np.c_[np.full(self.dim, -1, dtype=int), board, np.full(self.dim, -1, dtype=int)]
+        board = np.r_[[np.full(self.dim + 2, -1, dtype=int)], board, [np.full(self.dim + 2, -1, dtype=int)]]
         return board
 
-    def generate_solution(self):
+    def generateSolution(self):
         values = np.arange(self.dim * self.dim)
         values = values[1:]
 
@@ -66,6 +68,7 @@ class puzzle_board:
         solution[:, -1] = -1
         solution[0, :] = -1
         solution[-1, :] = -1
+
         x = 1
         y = 1
         dir = "→"
