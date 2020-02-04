@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import re
 from tools import read_file
+from pzl_tools import *
 
 class puzzle_board:
 
@@ -44,11 +45,11 @@ class puzzle_board:
             size = random.randint(3, 100)
         self.dim = int(size)
 
-    def generate_puzzle(self, values=None):
+    def generate_puzzle(self, values=None, solution=False):
         if values == None:
             values = np.arange(self.dim * self.dim)
             np.random.shuffle(values)
-        elif self.check_values(values) == -1:
+        elif solution == False and self.check_values(values) == -1:
             print('[Error puzzle file values]')
             sys.exit(2)
 
@@ -56,15 +57,41 @@ class puzzle_board:
         board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
         return board
 
+    def generate_solution(self):
+        values = np.arange(self.dim * self.dim)
+        values = values[1:]
 
-pzl = puzzle_board()
+        solution = np.full((self.dim + 2, self.dim + 2), 0, dtype=int)
+        solution[:, 0] = -1
+        solution[:, -1] = -1
+        solution[0, :] = -1
+        solution[-1, :] = -1
+        x = 1
+        y = 1
+        dir = "→"
+        for val in values:
+            solution[x, y] = val
+            dir = get_direction(solution, (x, y), dir)
+            if dir == "→":
+                y += 1
+            elif dir == "↓":
+                x += 1
+            elif dir == "←":
+                y -= 1
+            elif dir == "↑":
+                x -= 1
+        return solution
 
-if len(sys.argv) > 1:
-    file = read_file(sys.argv[1])
-    values = pzl.parse_puzzle(file)
-    board = pzl.generate_puzzle(values)
-else:
-    pzl.define_dim()
-    board = pzl.generate_puzzle()
 
-print(board)
+# pzl = puzzle_board()
+#
+# if len(sys.argv) > 1:
+#     file = read_file(sys.argv[1])
+#     values = pzl.parse_puzzle(file)
+#     board = pzl.generate_puzzle(values)
+# else:
+#     pzl.define_dim()
+#     board = pzl.generate_puzzle()
+#
+# print(board)
+# print(pzl.generate_solution())
