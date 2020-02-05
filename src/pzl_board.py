@@ -2,13 +2,17 @@ import random
 import numpy as np
 import sys
 import re
-from tools import read_file
+from tools import readFile
 from pzl_tools import *
+import math
 
 class PuzzleBoard:
 
     def __init__(self):
         self.dim = -1
+        self.pzl = 0
+        self.slt = 0
+        self.lck = 0
 
     def parsePuzzle(self, data:str):
         lines = data.split('\n')
@@ -36,6 +40,29 @@ class PuzzleBoard:
             if x_match == False:
                 return -1
 
+    def checkSolvable(self, values:list):
+        idx0 = values.index(0)
+        dim = self.dim
+        parite = math.ceil((dim - 1) + (dim - 1) - ((idx0 / dim) + (idx0 % dim)))
+        tmp_val = values.copy()
+        tmp_val[idx0] = tmp_val[-1]
+        tmp_val[-1] = 0
+        print(f'parite = {tmp_val}')
+        nb_permutation = 0
+        i = len(tmp_val) - 1
+        while i > 0:
+            if tmp_val[i - 1] < i:
+                n = i - 1
+                while n >= 0:
+                    if tmp_val[n] == i:
+                        tmp = tmp_val[n]
+                        tmp_val[n] = tmp_val[i - 1]
+                        tmp_val[i - 1] = tmp
+                        nb_permutation += 1
+                    n += 1
+            i += 1
+        print("")
+
     def defineDim(self):
         size = input("Enter puzzle size or 0 for random : ")
         if not re.match('^[03-9]$|^[0-9]{2,4}$', size):
@@ -49,14 +76,18 @@ class PuzzleBoard:
         if values == None:
             values = np.arange(self.dim * self.dim)
             np.random.shuffle(values)
-        elif solution == False and self.check_values(values) == -1:
+        elif solution == False and self.checkValues(values) == -1:
             print('[Error puzzle file values]')
             sys.exit(2)
 
+        #self.checkSolvable(values)
+
         values = np.asarray(values)
         board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
+        #verify is solvable
         board = np.c_[np.full(self.dim, -1, dtype=int), board, np.full(self.dim, -1, dtype=int)]
         board = np.r_[[np.full(self.dim + 2, -1, dtype=int)], board, [np.full(self.dim + 2, -1, dtype=int)]]
+        self.pzl = board
         return board
 
     def generateSolution(self):
@@ -68,6 +99,7 @@ class PuzzleBoard:
         solution[:, -1] = -1
         solution[0, :] = -1
         solution[-1, :] = -1
+        self.lck = np.copy(solution)
 
         x = 1
         y = 1
@@ -83,18 +115,21 @@ class PuzzleBoard:
                 y -= 1
             elif dir == "↑":
                 x -= 1
+        self.slt = solution
         return solution
 
 
-# pzl = puzzle_board()
+# boards = PuzzleBoard()
 #
 # if len(sys.argv) > 1:
-#     file = read_file(sys.argv[1])
-#     values = pzl.parse_puzzle(file)
-#     board = pzl.generate_puzzle(values)
+#     file = readFile(sys.argv[1])
+#     values = boards.parsePuzzle(file)
+#     boards.generatePuzzle(values)
 # else:
-#     pzl.define_dim()
-#     board = pzl.generate_puzzle()
+#     boards.defineDim()
+#     boards.generatePuzzle()
 #
-# print(board)
-# print(pzl.generate_solution())
+# boards.generateSolution()
+#
+# print(boards.pzl)
+# print(boards.slt)
