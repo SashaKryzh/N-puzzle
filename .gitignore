@@ -4,8 +4,7 @@
 .env
 
 # virtualenv
-.venv
-venv/
+
 ENV/
 
 # Installer logs
