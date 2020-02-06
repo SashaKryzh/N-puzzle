@@ -2,7 +2,7 @@ import random
 import numpy as np
 import sys
 import re
-from tools import readFile
+from tools import *
 from pzl_tools import *
 import math
 
@@ -30,7 +30,7 @@ class PuzzleBoard:
 
     def checkValues(self, values:list):
         if len(values) != self.dim * self.dim:
-            return -1
+            return False
         xcheck = np.arange(self.dim * self.dim)
         for x_val in xcheck:
             x_match = False
@@ -38,17 +38,19 @@ class PuzzleBoard:
                 if x_val == x:
                     x_match = True
             if x_match == False:
-                return -1
+                return False
+        return True
 
     def checkSolvable(self, values:list):
         idx0 = values.index(0)
         dim = self.dim
         parite = math.ceil((dim - 1) + (dim - 1) - ((idx0 / dim) + (idx0 % dim)))
         tmp_val = values.copy()
-        tmp_val[idx0] = tmp_val[-1]
-        tmp_val[-1] = 0
-        print(f'parite = {tmp_val}')
         nb_permutation = 0
+        if tmp_val[-1] != 0:
+            tmp_val[idx0] = tmp_val[-1]
+            tmp_val[-1] = 0
+            nb_permutation += 1
         i = len(tmp_val) - 1
         while i > 0:
             if tmp_val[i - 1] < i:
@@ -59,9 +61,14 @@ class PuzzleBoard:
                         tmp_val[n] = tmp_val[i - 1]
                         tmp_val[i - 1] = tmp
                         nb_permutation += 1
-                    n += 1
-            i += 1
-        print("")
+                    n -= 1
+            i -= 1
+        print(f"nb permutation {nb_permutation} et parite {parite}")
+        if parite % 2 == nb_permutation % 2:
+            print("Not solvable")
+            return False
+        else:
+            return True
 
     def defineDim(self):
         size = input("Enter puzzle size or 0 for random : ")
@@ -72,19 +79,19 @@ class PuzzleBoard:
             size = random.randint(3, 100)
         self.dim = int(size)
 
-    def generatePuzzle(self, values=None, solution=False):
+    def generatePuzzle(self, values=None):
         if values == None:
             values = np.arange(self.dim * self.dim)
-            np.random.shuffle(values)
-        elif solution == False and self.checkValues(values) == -1:
+            solvable = False
+            while not solvable:
+                np.random.shuffle(values)
+                solvable = self.checkSolvable(values)
+        elif not self.checkValues(values) or not self.checkSolvable(values):
             print('[Error puzzle file values]')
             sys.exit(2)
 
-        #self.checkSolvable(values)
-
         values = np.asarray(values)
         board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
-        #verify is solvable
         board = np.c_[np.full(self.dim, -1, dtype=int), board, np.full(self.dim, -1, dtype=int)]
         board = np.r_[[np.full(self.dim + 2, -1, dtype=int)], board, [np.full(self.dim + 2, -1, dtype=int)]]
         self.pzl = board
