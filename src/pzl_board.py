@@ -63,7 +63,9 @@ class PuzzleBoard:
                         nb_permutation += 1
                     n -= 1
             i -= 1
-        if parite % 2 != nb_permutation % 2:
+        print(f"nb permutation {nb_permutation} et parite {parite}")
+        if parite % 2 == nb_permutation % 2:
+            print("Not solvable")
             return False
         else:
             return True
