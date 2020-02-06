@@ -1,13 +1,33 @@
+import numpy as np
+
 
 def manhattan_distance(board, goal):
-    board_flat = [item for sublist in state for item in sublist]
-    goal_flat = range(0, len(flat_statelist))
-    mandistance = 0
+    board_flat = board.ravel()
+    goal_flat = goal.ravel()
 
-    # We use it's modular arthmetic to get it's x and y coordinates in the grid. The manhattan distance is the sum of all these x
-    # and y coordinates for each of the tiles
-    for element in flat_statelist:
-        distance = abs(flat_goallist.index(element) - flat_statelist.index(element))
-        xcoord, ycoord = distance // len(state[0]), distance % len(state[0])
-        mandistance += xcoord + ycoord
+    mandistance = 0
+    for element in board.tolist():
+        # distance = abs(np.where(goal_flat == element) - np.where(board_flat - element))
+        # x, y = distance // board.shape[0], distance % board.shape[0]
+        # mandistance += x + y
     return mandistance
+
+
+board = np.array([
+    [1, 2, 5],
+    [3, 0, 6],
+    [7, 4, 8],
+])
+
+goal = np.array([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 0],
+])
+
+
+print(board)
+print(goal)
+# manhattan_distance(board, goal)
+
+np.where
