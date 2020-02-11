@@ -6,6 +6,7 @@ from tools import *
 from pzl_tools import *
 from pzl_solvability import *
 
+
 class PuzzleBoard:
 
     def __init__(self):

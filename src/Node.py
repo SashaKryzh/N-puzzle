@@ -1,5 +1,7 @@
 import numpy as np
 
+from heuristics import manhattan_distance
+
 
 class Node:
 
@@ -33,7 +35,9 @@ class Node:
         if col < self.board.shape[0] - 1:
             children.append(swap_to_copy((row, col), (row, col + 1)))
 
-        return [Node(x, self.g + 1, heuristic(x, goal_board)) for x in children]
+        ret = [Node(x, self.g + 1, heuristic(x, goal_board)) for x in children]
+        ret.sort()
+        return ret
 
     def __eq__(self, other):
         if isinstance(other, np.ndarray):
@@ -45,14 +49,23 @@ class Node:
         s = "f = " + str(self.f) + "\n"
         return s + str(self.board)
 
+    def __lt__(self, other):
+        return self.f < other.f
 
-# goal = np.array([
-#     [0, 2, 3],
-#     [8, 1, 4],
+
+# board = np.array([
+#     [1, 2, 3],
+#     [8, 4, 0],
 #     [7, 6, 5],
 # ])
-
-# node = Node(goal, 0, 0)
+#
+# goal = np.array([
+#     [1, 2, 3],
+#     [8, 0, 4],
+#     [7, 6, 5],
+# ])
+#
+# node = Node(board, 0, 0)
 # c = node.children(manhattan_distance, goal)
 # print(c)
 # for i in c:

@@ -9,6 +9,7 @@ def manhattan_distance(board, goal):
         mandistance += abs(g_index[0][0] - b_index[0][0]) + abs(g_index[1][0] - b_index[1][0])
     return mandistance
 
+# TODO: 2 more heuristics
 
 # board = np.array([
 #     [1, 2, 5],
