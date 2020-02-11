@@ -6,10 +6,10 @@ def manhattan_distance(board, goal):
     goal_flat = goal.ravel()
 
     mandistance = 0
-    for element in board.tolist():
-        # distance = abs(np.where(goal_flat == element) - np.where(board_flat - element))
-        # x, y = distance // board.shape[0], distance % board.shape[0]
-        # mandistance += x + y
+    for element in board_flat:
+        distance = abs(np.where(goal_flat == element)[0][0] - np.where(board_flat == element)[0][0])
+        x, y = distance // board.shape[0], distance % board.shape[0]
+        mandistance += x + y
     return mandistance
 
 
@@ -19,15 +19,16 @@ board = np.array([
     [7, 4, 8],
 ])
 
+# board = np.array([
+#     [1, 4, 3],
+#     [8, 0, 2],
+#     [7, 6, 5],
+# ])
+
 goal = np.array([
     [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 0],
+    [8, 0, 4],
+    [7, 6, 5],
 ])
 
-
-print(board)
-print(goal)
-# manhattan_distance(board, goal)
-
-np.where
+print(manhattan_distance(board, goal))
