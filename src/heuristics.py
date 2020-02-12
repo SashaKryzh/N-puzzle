@@ -4,12 +4,16 @@ import numpy as np
 def manhattan_distance(board, goal):
     mandistance = 0
     for element in board.ravel():
+        if element == 0:
+            continue
         b_index = np.where(board == element)
         g_index = np.where(goal == element)
         mandistance += abs(g_index[0][0] - b_index[0][0]) + abs(g_index[1][0] - b_index[1][0])
     return mandistance
 
 # TODO: 2 more heuristics
+# def linear_conflict(board, goal):
+
 
 # board = np.array([
 #     [1, 2, 5],
