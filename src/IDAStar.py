@@ -1,7 +1,7 @@
 import numpy as np
 
 from Node import Node
-from heuristics import manhattan_distance
+from heuristics import *
 
 
 # TODO: additional check if solvable
@@ -56,10 +56,17 @@ class IDAStar:
 
 
 # board = np.array([
-#     [4, 1, 10, 8],
-#     [13, 5, 14, 3],
-#     [0, 7, 11, 9],
-#     [2, 12, 6, 15],
+#     [5,  1,  7,  3],
+#     [9,  2, 11,  4],
+#     [13,  6, 15,  8],
+#     [0, 10, 14, 12],
+# ])
+
+# board = np.array([
+#     [15, 14,  1,  6],
+#     [9, 11,  4, 12],
+#     [0, 10,  7,  3],
+#     [13,  8, 5,  2],
 # ])
 
 board = np.array([
@@ -89,12 +96,12 @@ goal = np.array([
 
 # goal = np.array([
 #     [1,  2,  3,  4],
-#     [12, 13, 14, 5],
-#     [11, 0,  15, 6],
-#     [10, 9,  8,  7],
+#     [5, 6, 7, 8],
+#     [9, 10,  11, 12],
+#     [13, 14,  15,  0],
 # ])
 
-ida = IDAStar(manhattan_distance)
+ida = IDAStar(linear_conflict)
 result = ida.solve(board, goal)
 print(result)
 for node in result[3]:
