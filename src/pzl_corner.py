@@ -1,5 +1,8 @@
 import sys
+import numpy as np
 from pzl_move0 import move0
+from pzl_tools import get_direction
+
 
 def cornerUpRight(brds, x0, y0):
     if (brds.pzl[x0 - 1][y0] != brds.slt[x0 - 1][y0] or

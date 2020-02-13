@@ -1,12 +1,13 @@
 from pzl_cell import Cell
 from pzl_corner import *
+import numpy as np
 
 def chooseGoodMove(boards, cell):
     for x, y in cell.nxt_move:
         if boards.lck[x][y] != 1:
             return (x, y)
 
-def move_puzzle(boards):
+def Astar(boards):
     for i in range(1, boards.dim * boards.dim):
         cell = Cell(boards, i, np.where(boards.slt == i))
         while cell.cp != cell.trgt:

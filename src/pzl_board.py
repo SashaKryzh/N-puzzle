@@ -13,6 +13,23 @@ class PuzzleBoard:
         self.lck = 0
         self.nb_move = 0
 
+    def addBorder(self):
+        border_side = np.full(self.dim, -1, dtype=int)
+        border_updown = np.full(self.dim + 2, -1, dtype=int)
+        border_board = np.c_[border_side, self.pzl, border_side]
+        border_board = np.r_[[border_updown], border_board, [border_updown]]
+        self.pzl = border_board
+        border_board = np.c_[border_side, self.slt, border_side]
+        border_board = np.r_[[border_updown], border_board, [border_updown]]
+        self.slt = border_board
+
+    def delBorder(self, board):
+        tmp = np.delete(board, 0, 1)
+        tmp = np.delete(tmp, 0, 0)
+        tmp = np.delete(tmp, self.dim, 1)
+        tmp = np.delete(tmp, self.dim, 0)
+        return tmp
+
     def parsePuzzle(self, data:str):
         lines = data.split('\n')
         x = []
@@ -65,7 +82,8 @@ class PuzzleBoard:
                 y -= 1
             elif dir == "↑":
                 x -= 1
-        self.slt = solution
+
+        self.slt = self.delBorder(solution)
 
     def generatePuzzle(self, values=None, dim=3):
         if values == None:
@@ -84,12 +102,7 @@ class PuzzleBoard:
             sys.exit(2)
 
         values = np.asarray(values)
-        board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
-        board = np.c_[np.full(self.dim, -1, dtype=int), board, np.full(self.dim, -1, dtype=int)]
-        board = np.r_[[np.full(self.dim + 2, -1, dtype=int)], board, [np.full(self.dim + 2, -1, dtype=int)]]
-        self.pzl = board
-
-        return board
+        self.pzl = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
 
 
 # boards = PuzzleBoard()
