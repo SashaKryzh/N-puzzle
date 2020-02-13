@@ -1,11 +1,8 @@
-import random
 import numpy as np
-import sys
 import re
 from tools import *
 from pzl_tools import *
 from pzl_solvability import *
-
 
 class PuzzleBoard:
 
@@ -14,6 +11,7 @@ class PuzzleBoard:
         self.pzl = 0
         self.slt = 0
         self.lck = 0
+        self.nb_move = 0
 
     def parsePuzzle(self, data:str):
         lines = data.split('\n')
@@ -69,15 +67,18 @@ class PuzzleBoard:
                 x -= 1
         self.slt = solution
 
-    def generatePuzzle(self, values=None):
-        self.generateSolution()
+    def generatePuzzle(self, values=None, dim=3):
         if values == None:
+            self.dim = dim
+            self.generateSolution()
             values = np.arange(self.dim * self.dim)
+            np.random.shuffle(values)
             while not Solvability(self.dim, values, self.slt).solvable:
                 np.random.shuffle(values)
         elif not self.checkValues(values):
             print('[Error puzzle file values]')
             sys.exit(2)
+        self.generateSolution()
         if not Solvability(self.dim, values, self.slt).solvable:
             print('[Error puzzle not solvable]')
             sys.exit(2)
@@ -102,4 +103,3 @@ class PuzzleBoard:
 #     boards.generatePuzzle()
 #
 # print(boards.pzl)
-# print(boards.slt)
