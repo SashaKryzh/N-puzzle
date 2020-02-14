@@ -1,11 +1,8 @@
-import random
 import numpy as np
-import sys
 import re
 from tools import *
 from pzl_tools import *
 from pzl_solvability import *
-
 
 class PuzzleBoard:
 
@@ -14,6 +11,24 @@ class PuzzleBoard:
         self.pzl = 0
         self.slt = 0
         self.lck = 0
+        self.nb_move = 0
+
+    def addBorder(self):
+        border_side = np.full(self.dim, -1, dtype=int)
+        border_updown = np.full(self.dim + 2, -1, dtype=int)
+        border_board = np.c_[border_side, self.pzl, border_side]
+        border_board = np.r_[[border_updown], border_board, [border_updown]]
+        self.pzl = border_board
+        border_board = np.c_[border_side, self.slt, border_side]
+        border_board = np.r_[[border_updown], border_board, [border_updown]]
+        self.slt = border_board
+
+    def delBorder(self, board):
+        tmp = np.delete(board, 0, 1)
+        tmp = np.delete(tmp, 0, 0)
+        tmp = np.delete(tmp, self.dim, 1)
+        tmp = np.delete(tmp, self.dim, 0)
+        return tmp
 
     def parsePuzzle(self, data:str):
         lines = data.split('\n')
@@ -67,28 +82,27 @@ class PuzzleBoard:
                 y -= 1
             elif dir == "↑":
                 x -= 1
-        self.slt = solution
 
-    def generatePuzzle(self, values=None):
-        self.generateSolution()
+        self.slt = self.delBorder(solution)
+
+    def generatePuzzle(self, values=None, dim=3):
         if values == None:
+            self.dim = dim
+            self.generateSolution()
             values = np.arange(self.dim * self.dim)
+            np.random.shuffle(values)
             while not Solvability(self.dim, values, self.slt).solvable:
                 np.random.shuffle(values)
         elif not self.checkValues(values):
             print('[Error puzzle file values]')
             sys.exit(2)
+        self.generateSolution()
         if not Solvability(self.dim, values, self.slt).solvable:
             print('[Error puzzle not solvable]')
             sys.exit(2)
 
         values = np.asarray(values)
-        board = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
-        board = np.c_[np.full(self.dim, -1, dtype=int), board, np.full(self.dim, -1, dtype=int)]
-        board = np.r_[[np.full(self.dim + 2, -1, dtype=int)], board, [np.full(self.dim + 2, -1, dtype=int)]]
-        self.pzl = board
-
-        return board
+        self.pzl = np.ndarray((self.dim, self.dim), buffer=values, dtype=int)
 
 
 # boards = PuzzleBoard()
@@ -102,4 +116,3 @@ class PuzzleBoard:
 #     boards.generatePuzzle()
 #
 # print(boards.pzl)
-# print(boards.slt)

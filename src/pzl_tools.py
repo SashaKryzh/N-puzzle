@@ -19,3 +19,4 @@ def get_direction(board, coord, dir, wall=False):
         elif dir == "↑" and board[coord[0] - 1][coord[1]] != 0:
             dir = "→"
         return dir
+
