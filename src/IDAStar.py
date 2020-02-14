@@ -69,11 +69,11 @@ class IDAStar:
 #     [13,  8, 5,  2],
 # ])
 
-board = np.array([
-    [3, 2, 6],
-    [1, 4, 0],
-    [8, 7, 5],
-])
+# board = np.array([
+#     [3, 2, 6],
+#     [1, 4, 0],
+#     [8, 7, 5],
+# ])
 
 # board = np.array([
 #     [1, 3, 4],
@@ -81,11 +81,11 @@ board = np.array([
 #     [6, 8, 2],
 # ])
 
-goal = np.array([
-    [1, 2, 3],
-    [8, 0, 4],
-    [7, 6, 5],
-])
+# goal = np.array([
+#     [1, 2, 3],
+#     [8, 0, 4],
+#     [7, 6, 5],
+# ])
 
 # goal = np.array([
 #     [1,  2,  3,  4],
@@ -101,8 +101,8 @@ goal = np.array([
 #     [13, 14,  15,  0],
 # ])
 
-ida = IDAStar(linear_conflict)
-result = ida.solve(board, goal)
-print(result)
-for node in result[3]:
-    print(node)
+# ida = IDAStar(linear_conflict)
+# result = ida.solve(board, goal)
+# print(result)
+# for node in result[3]:
+#     print(node)

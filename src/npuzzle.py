@@ -40,11 +40,17 @@ if __name__ == "__main__":
         boards.addBorder()
         Astar(boards)
         boards.pzl = boards.delBorder(boards.pzl)
+
+        print(save)
+        print(boards.pzl)
+        print(boards.nb_move)
+
     if args.IDAStar:
         ida = IDAStar(manhattan_distance)
         result = ida.solve(boards.pzl, boards.slt)
         print(result)
+        for node in result[3]:
+            print(node)
 
-    print(save)
-    print(boards.pzl)
-    print(boards.nb_move)
+
+
