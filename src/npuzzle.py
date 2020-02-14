@@ -2,7 +2,7 @@ import argparse
 import sys
 from pzl_board import PuzzleBoard
 from pzl_move import Astar
-from IDAStar import IDAStar, manhattan_distance
+from IDAStar import *
 from tools import readFile
 
 import numpy
@@ -11,12 +11,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', '-f', default=False,
                         help="Puzzle file to solve")
-    parser.add_argument("-h1", "--Astar", action='count', default=False,
-                        help="Will use heuristic function 1")
-    parser.add_argument("-h2", "--IDAStar", action='count', default=False,
-                        help="Will use heuristic function 2")
-    parser.add_argument("-h3", "--heuristic3", action='count', default=False,
-                        help="Will use heuristic function 3")
 
     args = parser.parse_args()
     boards = PuzzleBoard()
@@ -28,29 +22,41 @@ if __name__ == "__main__":
     else:
         boards.generatePuzzle(dim=3)
 
-    if (args.Astar and (args.IDAStar or args.heuristic3) or
-        args.IDAStar and (args.Astar or args.heuristic3) or
-        args.heuristic3 and (args.Astar or args.IDAStar)):
-        print("Can't use 2 different heuristic function")
-        sys.exit(1)
+    print(f"\nPUZZLE BOARD GENERATED :\n{boards.pzl}\n")
+    user = input("Select algorithme to solve above puzzle.\n"
+          "    IDAStar algorithm :\n"
+          "      [1] manhattan heuristic function\n"
+          "      [2] linear heuristic function\n"
+          "      [3] foo heuristic function\n"
+          "\n"
+          "    AStar algorithme :\n"
+          "      [4] faster\n"
+          "$>")
 
     save = numpy.copy(boards.pzl)
 
-    if args.Astar:
-        boards.addBorder()
-        Astar(boards)
-        boards.pzl = boards.delBorder(boards.pzl)
-
-        print(save)
-        print(boards.pzl)
-        print(boards.nb_move)
-
-    if args.IDAStar:
+    if user == '1':
         ida = IDAStar(manhattan_distance)
         result = ida.solve(boards.pzl, boards.slt)
         print(result)
         for node in result[3]:
             print(node)
-
-
+    elif user == '2':
+        ida = IDAStar(linear_conflict)
+        result = ida.solve(boards.pzl, boards.slt)
+        print(result)
+        for node in result[3]:
+            print(node)
+    elif user == '3':
+        print("Foooo")
+    elif user == '4':
+        boards.addBorder()
+        Astar(boards)
+        boards.pzl = boards.delBorder(boards.pzl)
+        print(save)
+        print(boards.pzl)
+        print(boards.nb_move)
+    else:
+        print("Wrong input. Exit.")
+        sys.exit(1)
 
