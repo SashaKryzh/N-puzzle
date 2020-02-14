@@ -12,7 +12,6 @@ def manhattan_distance(board, goal):
     return mandistance
 
 
-# TODO: linear conflict
 def linear_conflict(board, goal):
     def calculate_conflicts(have, goal):
         # print(have)
@@ -39,8 +38,17 @@ def linear_conflict(board, goal):
         conflicts += calculate_conflicts(b_col, g_col)
     return mandistance + (conflicts * 2)
 
-# TODO: walking_distance or pattern_database
-# def walking_distance(board, goal):
+
+def misplaced(board, goal):
+    misplaced = 0
+    for element in board.ravel():
+        if element == 0:
+            continue
+        b_index = np.where(board == element)
+        g_index = np.where(goal == element)
+        if g_index[0][0] != b_index[0][0] and g_index[1][0] != b_index[1][0]:
+            misplaced += 1
+    return misplaced
 
 # board = np.array([
 #     [4, 2, 5],

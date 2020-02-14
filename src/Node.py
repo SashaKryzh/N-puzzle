@@ -5,12 +5,13 @@ from heuristics import manhattan_distance
 
 class Node:
 
-    def __init__(self, board, goal_board, g, heuristic):
+    def __init__(self, board, goal_board, g, heuristic, move='Initial'):
         self.__board = board
         self.__goal_board = goal_board
         self.__g = g
         self.__heuristic = heuristic
         self.__h = self.__heuristic(board, goal_board)
+        self.__move_direction = move
 
     @property
     def f(self):
@@ -18,25 +19,25 @@ class Node:
 
     @property
     def children(self):
-        def swap_to_copy(a, b):
+        def swap_to_copy(a, b, move):
             new_board = self.__board.copy()
             tmp = new_board[b[0]][b[1]]
             new_board[b[0]][b[1]] = 0
             new_board[a[0]][a[1]] = tmp
-            return Node(new_board, self.__goal_board, self.__g + 1, self.__heuristic)
+            return Node(new_board, self.__goal_board, self.__g + 1, self.__heuristic, move)
 
         children = []
         empty_index = np.where(self.__board == 0)
         row, col = empty_index[0][0], empty_index[1][0]
 
-        if row > 0:
-            children.append(swap_to_copy((row, col), (row - 1, col)))
-        if row < self.__board.shape[1] - 1:
-            children.append(swap_to_copy((row, col), (row + 1, col)))
-        if col > 0:
-            children.append(swap_to_copy((row, col), (row, col - 1)))
-        if col < self.__board.shape[0] - 1:
-            children.append(swap_to_copy((row, col), (row, col + 1)))
+        if self.__move_direction != 'Down'  and row > 0:
+            children.append(swap_to_copy((row, col), (row - 1, col), 'Up'))
+        if self.__move_direction != 'Up'    and row < self.__board.shape[1] - 1:
+            children.append(swap_to_copy((row, col), (row + 1, col), 'Down'))
+        if self.__move_direction != 'Right' and col > 0:
+            children.append(swap_to_copy((row, col), (row, col - 1), 'Left'))
+        if self.__move_direction != 'Left'  and col < self.__board.shape[0] - 1:
+            children.append(swap_to_copy((row, col), (row, col + 1), 'Right'))
 
         children.sort()
         return children
@@ -45,10 +46,10 @@ class Node:
         if isinstance(other, np.ndarray):
             return np.array_equal(self.__board, other)
         else:
-            return np.array_equal(self.__board, other.board)
+            return np.array_equal(self.__board, other.__board)
 
     def __str__(self):
-        s = "f = " + str(self.f) + "\n"
+        s = self.__move_direction + ' (f = ' + self.f.__str__() + ')\n'
         return s + str(self.__board)
 
     def __lt__(self, other):

@@ -11,6 +11,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', '-f', default=False,
                         help="Puzzle file to solve")
+    # parser.add_argument('--greedy', '-g', default=False,
+    #                     help="Greedy search")
+    # parser.add_argument('--uniform', '-u', default=False,
+    #                     help="Uniform cost")
 
     args = parser.parse_args()
     boards = PuzzleBoard()
@@ -26,8 +30,8 @@ if __name__ == "__main__":
     user = input("Select algorithme to solve above puzzle.\n"
           "    IDAStar algorithm :\n"
           "      [1] manhattan heuristic function\n"
-          "      [2] linear heuristic function\n"
-          "      [3] foo heuristic function\n"
+          "      [2] linear conflict heuristic function\n"
+          "      [3] misplaced heuristic function\n"
           "\n"
           "    AStar algorithme :\n"
           "      [4] faster\n"
@@ -35,20 +39,12 @@ if __name__ == "__main__":
 
     save = numpy.copy(boards.pzl)
 
-    if user == '1':
-        ida = IDAStar(manhattan_distance)
+    if user == '1' or user == '2' or user == '3':
+        heuristic = manhattan_distance if user == '1' else linear_conflict if user == '2' else misplaced
+        ida = IDAStar(heuristic)
         result = ida.solve(boards.pzl, boards.slt)
-        print(result)
-        for node in result[3]:
-            print(node)
-    elif user == '2':
-        ida = IDAStar(linear_conflict)
-        result = ida.solve(boards.pzl, boards.slt)
-        print(result)
-        for node in result[3]:
-            print(node)
-    elif user == '3':
-        print("Foooo")
+        ida.show_result()
+
     elif user == '4':
         boards.addBorder()
         Astar(boards)
@@ -56,6 +52,7 @@ if __name__ == "__main__":
         print(save)
         print(boards.pzl)
         print(boards.nb_move)
+
     else:
         print("Wrong input. Exit.")
         sys.exit(1)

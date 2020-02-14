@@ -39,7 +39,7 @@ class IDAStar:
             return n.f
         if n == self.goal_board:
             return self.FOUND
-        minimum_cost = self.INFINITY
+        minimum_cost = None
         for child in n.children:
             self.opened += 1
             self.now_opened += 1
@@ -49,11 +49,18 @@ class IDAStar:
             if child_ida == self.FOUND:
                 self.path.append(child)
                 return self.FOUND
-            if child_ida < minimum_cost:
+            if minimum_cost is None or (child_ida is not None and child_ida < minimum_cost):
                 minimum_cost = child_ida
             self.now_opened -= 1
         return minimum_cost
 
+    def show_result(self):
+        for node in self.path:
+            print(node)
+        print('\nResults using IDA*')
+        print('Complexity in time: ' + self.opened.__str__())
+        print('Complexity in size: ' + self.max_in_memory.__str__())
+        print('Number of moves required: ' + len(self.path).__str__())
 
 # board = np.array([
 #     [5,  1,  7,  3],
