@@ -65,7 +65,11 @@ if __name__ == "__main__":
     if user == '1' or user == '2' or user == '3':
         heuristic = manhattan_distance if user == '1' else linear_conflict if user == '2' else misplaced
         ida = IDAStar(heuristic, greedy=True if additional == "1" else False)
-        result = ida.solve(boards.pzl, boards.slt)
+        try:
+            result = ida.solve(boards.pzl, boards.slt)
+        except RecursionError:
+            print("This puzzle is too hard for Greedy search :(")
+            exit(1)
         ida.show_result()
 
     elif user == '4':
