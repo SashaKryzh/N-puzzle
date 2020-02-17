@@ -1,5 +1,4 @@
 import argparse
-import sys
 from pzl_board import PuzzleBoard
 from pzl_move import Astar
 from IDAStar import *
@@ -23,7 +22,7 @@ def select_algorithm(is_file=False):
                  "      [3] misplaced heuristic\n"
                  "\n"
                  "    AStar algorithm :\n"
-                 "      [4] faster\n"
+                 "      [4] manhattan heuristic\n"
                  "$>")
 
     additional = "0"
@@ -39,7 +38,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', default=False,
                         help="file with a puzzle")
-    parser.add_argument('-g', '--generate', default=False,
+    parser.add_argument('-g', '--generate', action='count', default=False,
                         help="generate puzzle board")
     args = parser.parse_args()
 
@@ -52,7 +51,7 @@ if __name__ == "__main__":
         values = boards.parsePuzzle(file)
         boards.generatePuzzle(values)
     else:
-        boards.generatePuzzle(dim=5)
+        boards.generatePuzzle(dim=3)
 
     user, additional = select_algorithm(is_file=args.file)
 

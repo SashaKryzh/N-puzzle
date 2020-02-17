@@ -14,12 +14,16 @@ def Astar(boards):
             cell.nxt_move = []
             x, y = int(cell.cp[0]), int(cell.cp[1])
             if cell.cp[0] > cell.trgt[0]:
+                boards.cplx_time += 1
                 cell.nxt_move.append((x - 1, y))
             if cell.cp[0] < cell.trgt[0]:
+                boards.cplx_time += 1
                 cell.nxt_move.append((x + 1, y))
             if cell.cp[1] > cell.trgt[1]:
+                boards.cplx_time += 1
                 cell.nxt_move.append((x, y - 1))
             if cell.cp[1] < cell.trgt[1]:
+                boards.cplx_time += 1
                 cell.nxt_move.append((x, y + 1))
             cell.nxt_move = chooseGoodMove(boards, cell)
             cell0 = move0(boards, cell.nb, cell.nxt_move)
@@ -36,7 +40,7 @@ def Astar(boards):
 
         boards.lck[int(cell.trgt[0])][int(cell.trgt[1])] = 1
 
-    boards.cplx_time = boards.nb_move
+    print(boards.cplx_time)
     boards.cplx_size = boards.nb_move + boards.cplx_size
     boards.nb_move -= boards.cplx_size - boards.nb_move
     ret = "\nResults using A*\n" \

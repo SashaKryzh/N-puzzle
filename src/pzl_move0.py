@@ -50,13 +50,17 @@ def move0(boards, cell_nb, target):
         cell0.nxt_move = []
         x, y = int(cell0.cp[0]), int(cell0.cp[1])
         if (x + 1, y) != cell0.last_move[-1] and boards.pzl[x + 1][y] != -1 and boards.pzl[x + 1][y] != cell_nb:
+            boards.cplx_time += 1
             cell0.nxt_move.append((x + 1, y))
         if (x - 1, y) != cell0.last_move[-1] and boards.pzl[x - 1][y] != -1 and boards.pzl[x - 1][y] != cell_nb:
             cell0.nxt_move.append((x - 1, y))
+            boards.cplx_time += 1
         if (x, y + 1) != cell0.last_move[-1] and boards.pzl[x][y + 1] != -1 and boards.pzl[x][y + 1] != cell_nb:
             cell0.nxt_move.append((x, y + 1))
+            boards.cplx_time += 1
         if (x, y - 1) != cell0.last_move[-1] and boards.pzl[x][y - 1] != -1 and boards.pzl[x][y - 1] != cell_nb:
             cell0.nxt_move.append((x, y - 1))
+            boards.cplx_time += 1
         cell0.nxt_move = chooseGoodDirection(boards, cell0)
         cell0.cp = np.where(boards.pzl == 0)
         x, y = int(cell0.cp[0]), int(cell0.cp[1])

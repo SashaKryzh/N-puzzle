@@ -60,6 +60,8 @@ class IDAStar:
             if minimum_cost is None or (child_ida is not None and child_ida < minimum_cost):
                 minimum_cost = child_ida
             self.now_opened -= 1
+        if minimum_cost is None:
+            return threshold + 1
         return minimum_cost
 
     def show_result(self):
