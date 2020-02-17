@@ -20,10 +20,14 @@ class IDAStar:
         self.now_opened = 1
         self.max_in_memory = 1
 
+        self.greedy_set = []
+
     def solve(self, start_board, goal_board):
         self.goal_board = goal_board
         start_node = Node(start_board, goal_board, 0, self.heuristic, greedy=self.greedy)
         threshold = start_node.f
+        if self.greedy:
+            self.greedy_set.append(start_node)
         while True:
             temp = self._search(start_node, threshold)
             if temp == self.FOUND:
@@ -41,6 +45,10 @@ class IDAStar:
             return self.FOUND
         minimum_cost = None
         for child in n.children:
+            if child in self.greedy_set:
+                continue
+            if self.greedy:
+                self.greedy_set.append(child)
             self.opened += 1
             self.now_opened += 1
             if self.now_opened > self.max_in_memory:
