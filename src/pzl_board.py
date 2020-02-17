@@ -94,11 +94,11 @@ class PuzzleBoard:
             while not Solvability(self.dim, values, self.slt).solvable:
                 np.random.shuffle(values)
         elif not self.checkValues(values):
-            print('[Error puzzle file values]')
+            print('[Error] Puzzle file values')
             sys.exit(2)
         self.generateSolution()
         if not Solvability(self.dim, values, self.slt).solvable:
-            print('[Error puzzle not solvable]')
+            print('[Error] Puzzle is not solvable')
             sys.exit(2)
 
         values = np.asarray(values)

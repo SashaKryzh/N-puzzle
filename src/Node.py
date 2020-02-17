@@ -5,13 +5,14 @@ from heuristics import manhattan_distance
 
 class Node:
 
-    def __init__(self, board, goal_board, g, heuristic, move='Initial'):
+    def __init__(self, board, goal_board, g, heuristic, move='Initial', greedy=False):
         self.__board = board
         self.__goal_board = goal_board
-        self.__g = g
+        self.__g = g if not greedy else 0
         self.__heuristic = heuristic
         self.__h = self.__heuristic(board, goal_board)
         self.__move_direction = move
+        self.greedy = greedy
 
     @property
     def f(self):
@@ -24,7 +25,7 @@ class Node:
             tmp = new_board[b[0]][b[1]]
             new_board[b[0]][b[1]] = 0
             new_board[a[0]][a[1]] = tmp
-            return Node(new_board, self.__goal_board, self.__g + 1, self.__heuristic, move)
+            return Node(new_board, self.__goal_board, self.__g + 1, self.__heuristic, move=move, greedy=self.greedy)
 
         children = []
         empty_index = np.where(self.__board == 0)

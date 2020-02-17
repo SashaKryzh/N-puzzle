@@ -4,11 +4,11 @@ from Node import Node
 from heuristics import *
 
 
-# TODO: additional check if solvable
 class IDAStar:
 
-    def __init__(self, heuristic):
+    def __init__(self, heuristic, greedy=False):
         self.heuristic = heuristic
+        self.greedy = greedy
 
         self.FOUND = object()
         self.INFINITY = 9223372036854775807
@@ -22,7 +22,7 @@ class IDAStar:
 
     def solve(self, start_board, goal_board):
         self.goal_board = goal_board
-        start_node = Node(start_board, goal_board, 0, self.heuristic)
+        start_node = Node(start_board, goal_board, 0, self.heuristic, greedy=self.greedy)
         threshold = start_node.f
         while True:
             temp = self._search(start_node, threshold)
