@@ -12,6 +12,8 @@ class PuzzleBoard:
         self.slt = 0
         self.lck = 0
         self.nb_move = 0
+        self.cplx_time = 0
+        self.cplx_size = 0
 
     def addBorder(self):
         border_side = np.full(self.dim, -1, dtype=int)

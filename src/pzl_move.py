@@ -29,7 +29,18 @@ def Astar(boards):
                 boards.pzl[x][y] = boards.pzl[cell.nxt_move[0]][cell.nxt_move[1]]
                 boards.pzl[cell.nxt_move[0]][cell.nxt_move[1]] = i
                 boards.nb_move += 1
+                print(boards.delBorder(boards.pzl))
 
             cell.cp = np.where(boards.pzl == i)
 
+
         boards.lck[int(cell.trgt[0])][int(cell.trgt[1])] = 1
+
+    boards.cplx_time = boards.nb_move
+    boards.cplx_size = boards.nb_move + boards.cplx_size
+    boards.nb_move -= boards.cplx_size - boards.nb_move
+    ret = "\nResults using A*\n" \
+          f"Complexity in time: {boards.cplx_time}\n" \
+          f"Complexity in size: {boards.cplx_size}\n" \
+          f"Number of moves required: {boards.nb_move}"
+    return ret

@@ -8,4 +8,5 @@ class Cell:
         self.nxt_move = []
         self.last_move = [0]
         self.tmp_board = 0
+        self.tmp_nb_move = 0
         self.tmp_direction = 0

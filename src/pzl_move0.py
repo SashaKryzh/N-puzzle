@@ -13,20 +13,30 @@ def chooseGoodDirection(boards, cell):
         elif distance == best_distance and boards.lck[move[0]][move[1]] != 1 and cell.tmp_direction == 0:
             cell.tmp_board = np.copy(boards.pzl)
             cell.tmp_direction = move
+            cell.tmp_nb_move = boards.nb_move
         #On peut aussi choisir si l'un des deux est un chiffre déjà bien placé
         #ou si les suivants sont déjà placé
     for lst_move in cell.last_move:
         if good_dir == lst_move and cell.tmp_direction != 0 and cell.tmp_direction != -1:
+            tmp = boards.nb_move - cell.tmp_nb_move
             boards.pzl = cell.tmp_board
             good_dir = cell.tmp_direction
             cell.tmp_direction = -1
+            boards.cplx_size += boards.nb_move - cell.tmp_nb_move
+            print(boards.cplx_size)
+            boards.nb_move -= boards.nb_move - cell.tmp_nb_move
+            cell.tmp_nb_move = 0
             return good_dir
         elif good_dir == lst_move:
             return False
     if good_dir == (0, 0) and cell.tmp_direction != 0 and cell.tmp_direction != -1:
+            tmp = boards.nb_move - cell.tmp_nb_move
             boards.pzl = cell.tmp_board
             good_dir = cell.tmp_direction
             cell.tmp_direction = -1
+            boards.cplx_size += boards.nb_move - cell.tmp_nb_move
+            boards.nb_move -= boards.nb_move - cell.tmp_nb_move
+            cell.tmp_nb_move = 0
             return good_dir
     elif good_dir == (0, 0): #corner situation
         return False
@@ -57,6 +67,7 @@ def move0(boards, cell_nb, target):
             boards.pzl[x][y] = boards.pzl[cell0.nxt_move[0]][cell0.nxt_move[1]]
             boards.pzl[cell0.nxt_move[0]][cell0.nxt_move[1]] = 0
             boards.nb_move += 1
+            print(boards.delBorder(boards.pzl))
         cell0.cp = np.where(boards.pzl == 0)
     return True
 

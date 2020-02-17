@@ -52,7 +52,7 @@ if __name__ == "__main__":
         values = boards.parsePuzzle(file)
         boards.generatePuzzle(values)
     else:
-        boards.generatePuzzle(dim=3)
+        boards.generatePuzzle(dim=5)
 
     user, additional = select_algorithm(is_file=args.file)
 
@@ -70,11 +70,8 @@ if __name__ == "__main__":
 
     elif user == '4':
         boards.addBorder()
-        Astar(boards)
-        boards.pzl = boards.delBorder(boards.pzl)
-        print(save)
-        print(boards.pzl)
-        print(boards.nb_move)
+        result = Astar(boards)
+        print(result)
 
     else:
         print("[Error] Wrong input")
